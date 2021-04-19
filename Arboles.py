@@ -39,7 +39,10 @@ def comprobar (op):
             valor=op.pop();
             if valor[1:]=='\n':
                 valor=valor[0];
-            return Nodo(comprobar(op[0:len(op)-1]),comprobar(op),valor);
+            if op[len(op)-1] in ['+', '-', '*', '/','+\n','-\n','*\n', '/\n']and len(op)>3: 
+                return Nodo(comprobar(op[0:len(op)-3]),comprobar(op),valor);
+            else:
+                return Nodo(comprobar(op[0:len(op)-1]),comprobar(op),valor);
         else:
             return Nodo(op[len(op)-1]);
 
@@ -51,9 +54,22 @@ for linea in handler:
     pila.append(linea);
 
 while pila != []:
+    izquierda=0;
+    derecha=0;
     operacion=pila.pop();
     operadores=operacion.split(' ');
     expresion=comprobar(operadores);
-    print(en_orden(expresion)+'='+str(evaluar(expresion)))
-
-
+    aux=expresion;
+    while aux.izquierda != None:
+        aux=aux.izquierda;
+        izquierda=izquierda+1;
+    aux=expresion;
+    while aux.derecha != None:
+        aux=aux.derecha;
+        derecha=derecha+1;
+    if izquierda==derecha:
+        print(en_orden(expresion)+'='+str(evaluar(expresion)))
+    if izquierda>derecha:
+        print(en_orden(expresion)+')='+str(evaluar(expresion)))
+    if izquierda<derecha:
+        print('('+en_orden(expresion)+'='+str(evaluar(expresion)))
